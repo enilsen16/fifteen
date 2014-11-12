@@ -117,6 +117,18 @@ void greet(void)
 void init(void)
 {
     // TODO
+    int num = (d * d) - 1;
+    int grid[d][d];
+    for (int i = 0; i < d; i++) {
+      for (int j = 0; i < d; j++) {
+        grid[i][j] = num;
+        num --;
+      }
+    }
+    if (((d * d) - 1) % 2 == 1)
+      grid[d-1][d-2] = grid[d-1][d-2] + grid[d-1][d-3];
+      grid[d-1][d-3] = grid[d-1][d-2] - grid[d-1][d-3];
+      grid[d-1][d-2] = grid[d-1][d-2] - grid[d-1][d-3];
 }
 
 /**
