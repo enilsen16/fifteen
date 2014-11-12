@@ -1,20 +1,5 @@
-/**
- * fifteen.c
- *
- * Computer Science 50
- * Problem Set 3
- *
- * Implements the Game of Fifteen (generalized to d x d).
- *
- * Usage: ./fifteen d
- *
- * whereby the board's dimensions are to be d x d,
- * where d must be in [MIN,MAX]
- *
- * Note that usleep is obsolete, but it offers more granularity than
- * sleep and is simpler to use than nanosleep; `man usleep` for more.
- */
- 
+
+
 #define _XOPEN_SOURCE 500
 
 #include <cs50.h>
@@ -144,7 +129,7 @@ void draw(void)
 
 /**
  * If tile borders empty space, moves tile and returns true, else
- * returns false. 
+ * returns false.
  */
 bool move(int tile)
 {
@@ -153,7 +138,7 @@ bool move(int tile)
 }
 
 /**
- * Returns true if game is won (i.e., board is in winning configuration), 
+ * Returns true if game is won (i.e., board is in winning configuration),
  * else false.
  */
 bool won(void)
