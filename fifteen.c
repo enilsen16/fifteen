@@ -135,7 +135,6 @@ void init(void)
  */
 void draw(void)
 {
-        // TODO
         //For each row
         for (int i = 0; i < d; i++) {
                 //For each value in row
@@ -205,8 +204,19 @@ bool move(int tile)
  */
 bool won(void)
 {
-        // TODO
-        return false;
+        for (int i = 0; i < d; i++) {
+                for (int j = 0; j < d-1; j++) {
+                        if ( board[d-1][d-2] == ((d * d) - 1) && board[d-1][d-1] == 0) {
+                                return true;
+                        }
+                        else if (board[i][j+1] - board[i][j] == 1) {
+                                continue;
+                        } else {
+                                return false;
+                        }
+                }
+        }
+        return true;
 }
 
 /**
