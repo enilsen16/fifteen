@@ -30,64 +30,64 @@ void save(void);
 
 int main(int argc, string argv[])
 {
-    // greet player
-    greet();
+        // greet player
+        greet();
 
-    // ensure proper usage
-    if (argc != 2)
-    {
-        printf("Usage: ./fifteen d\n");
-        return 1;
-    }
-
-    // ensure valid dimensions
-    d = atoi(argv[1]);
-    if (d < MIN || d > MAX)
-    {
-        printf("Board must be between %i x %i and %i x %i, inclusive.\n",
-            MIN, MIN, MAX, MAX);
-        return 2;
-    }
-
-    // initialize the board
-    init();
-
-    // accept moves until game is won
-    while (true)
-    {
-        // clear the screen
-        clear();
-
-        // draw the current state of the board
-        draw();
-
-        // saves the current state of the board (for testing)
-        save();
-
-        // check for win
-        if (won())
+        // ensure proper usage
+        if (argc != 2)
         {
-            printf("ftw!\n");
-            break;
+                printf("Usage: ./fifteen d\n");
+                return 1;
         }
 
-        // prompt for move
-        printf("Tile to move: ");
-        int tile = GetInt();
-
-        // move if possible, else report illegality
-        if (!move(tile))
+        // ensure valid dimensions
+        d = atoi(argv[1]);
+        if (d < MIN || d > MAX)
         {
-            printf("\nIllegal move.\n");
-            usleep(500000);
+                printf("Board must be between %i x %i and %i x %i, inclusive.\n",
+                       MIN, MIN, MAX, MAX);
+                return 2;
         }
 
-        // sleep for animation's sake
-        usleep(500000);
-    }
+        // initialize the board
+        init();
 
-    // that's all folks
-    return 0;
+        // accept moves until game is won
+        while (true)
+        {
+                // clear the screen
+                clear();
+
+                // draw the current state of the board
+                draw();
+
+                // saves the current state of the board (for testing)
+                save();
+
+                // check for win
+                if (won())
+                {
+                        printf("ftw!\n");
+                        break;
+                }
+
+                // prompt for move
+                printf("Tile to move: ");
+                int tile = GetInt();
+
+                // move if possible, else report illegality
+                if (!move(tile))
+                {
+                        printf("\nIllegal move.\n");
+                        usleep(500000);
+                }
+
+                // sleep for animation's sake
+                usleep(500000);
+        }
+
+        // that's all folks
+        return 0;
 }
 
 /**
@@ -95,8 +95,8 @@ int main(int argc, string argv[])
  */
 void clear(void)
 {
-    printf("\033[2J");
-    printf("\033[%d;%dH", 0, 0);
+        printf("\033[2J");
+        printf("\033[%d;%dH", 0, 0);
 }
 
 /**
@@ -104,9 +104,9 @@ void clear(void)
  */
 void greet(void)
 {
-    clear();
-    printf("GAME OF FIFTEEN\n");
-    usleep(2000000);
+        clear();
+        printf("GAME OF FIFTEEN\n");
+        usleep(2000000);
 }
 
 /**
@@ -116,19 +116,18 @@ void greet(void)
  */
 void init(void)
 {
-    // TODO
-    int num = (d * d) - 1;
-    int grid[d][d];
-    for (int i = 0; i < d; i++) {
-      for (int j = 0; i < d; j++) {
-        grid[i][j] = num;
-        num --;
-      }
-    }
-    if (((d * d) - 1) % 2 == 1)
-      grid[d-1][d-2] = grid[d-1][d-2] + grid[d-1][d-3];
-      grid[d-1][d-3] = grid[d-1][d-2] - grid[d-1][d-3];
-      grid[d-1][d-2] = grid[d-1][d-2] - grid[d-1][d-3];
+        int num = (d * d) - 1;
+        for (int i = 0; i < d; i++) {
+                for (int j = 0; j < d; j++) {
+                        board[i][j] = num;
+                        num--;
+                }
+        }
+        if ((((d * d) - 1) % 2) != 0) {
+                board[d-1][d-2] = board[d-1][d-2] + board[d-1][d-3];
+                board[d-1][d-3] = board[d-1][d-2] - board[d-1][d-3];
+                board[d-1][d-2] = board[d-1][d-2] - board[d-1][d-3];
+        }
 }
 
 /**
@@ -136,7 +135,22 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
+        // TODO
+        //For each row
+        for (int i = 0; i < d; i++) {
+                //For each value in row
+                for (int j = 0; j < d; j++ ) {
+                        //Print value and space
+                        if (board[i][j] == 0) {
+                                printf("__");
+                        } else {
+                                printf("%2d ", board[i][j]);
+                        }
+
+                }
+                //Print newline
+                printf("\n");
+        }
 }
 
 /**
@@ -145,8 +159,44 @@ void draw(void)
  */
 bool move(int tile)
 {
-    // TODO
-    return false;
+        //User inputs tile they'd like to move
+        //Checks to see if that tile exists and stores its postion
+        int tile_i;
+        int tile_j;
+        if (tile > ((d * d) - 1)) {
+                return false;
+        }
+        for (int i = 0; i < d; i++) {
+                for (int j = 0; j < d; j++) {
+                        if (board[i][j] == tile) {
+                                tile_i = i;
+                                tile_j = j;
+                        }
+                }
+        }
+        //Checks to see if blank tile is above, below, left or right of input tile
+        //If not return false
+        int tmp = board[tile_i][tile_j];
+        if (tile_i > 0 && board[tile_i-1][tile_j] == 0) { //up
+                //Swap blank tile and input tile
+                board[tile_i][tile_j] = board[tile_i-1][tile_j];
+                board[tile_i-1][tile_j] = tmp;
+                return true;
+        } else if (tile_i <= d-2 && board[tile_i+1][tile_j] == 0) { //down
+                board[tile_i][tile_j] = board[tile_i+1][tile_j];
+                board[tile_i+1][tile_j] = tmp;
+                return true;
+        } else if (tile_j > 0 && board[tile_i][tile_j-1] == 0) { //left
+                board[tile_i][tile_j] = board[tile_i][tile_j-1];
+                board[tile_i][tile_j-1] = tmp;
+                return true;
+        } else if (tile_j <= d-2 && board[tile_i][tile_j+1] == 0) { //right
+                board[tile_i][tile_j] = board[tile_i][tile_j+1];
+                board[tile_i][tile_j + 1] = tmp;
+                return true;
+        } else {
+                return false;
+        }
 }
 
 /**
@@ -155,8 +205,8 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
-    return false;
+        // TODO
+        return false;
 }
 
 /**
@@ -164,45 +214,45 @@ bool won(void)
  */
 void save(void)
 {
-    // log
-    const string log = "log.txt";
+        // log
+        const string log = "log.txt";
 
-    // delete existing log, if any, before first save
-    static bool saved = false;
-    if (!saved)
-    {
-        unlink(log);
-        saved = true;
-    }
+        // delete existing log, if any, before first save
+        static bool saved = false;
+        if (!saved)
+        {
+                unlink(log);
+                saved = true;
+        }
 
-    // open log
-    FILE* p = fopen(log, "a");
-    if (p == NULL)
-    {
-        return;
-    }
+        // open log
+        FILE* p = fopen(log, "a");
+        if (p == NULL)
+        {
+                return;
+        }
 
-    // log board
-    fprintf(p, "{");
-    for (int i = 0; i < d; i++)
-    {
+        // log board
         fprintf(p, "{");
-        for (int j = 0; j < d; j++)
+        for (int i = 0; i < d; i++)
         {
-            fprintf(p, "%i", board[i][j]);
-            if (j < d - 1)
-            {
-                fprintf(p, ",");
-            }
+                fprintf(p, "{");
+                for (int j = 0; j < d; j++)
+                {
+                        fprintf(p, "%i", board[i][j]);
+                        if (j < d - 1)
+                        {
+                                fprintf(p, ",");
+                        }
+                }
+                fprintf(p, "}");
+                if (i < d - 1)
+                {
+                        fprintf(p, ",");
+                }
         }
-        fprintf(p, "}");
-        if (i < d - 1)
-        {
-            fprintf(p, ",");
-        }
-    }
-    fprintf(p, "}\n");
+        fprintf(p, "}\n");
 
-    // close log
-    fclose(p);
+        // close log
+        fclose(p);
 }
